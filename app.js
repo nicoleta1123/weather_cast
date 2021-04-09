@@ -2,7 +2,6 @@ import axios from "axios";
 import { OPEN_WEATHER_MAP_API_KEY } from "./credentials.js";
 
 const city = process.argv[2];
-console.log(process.argv);
 
 async function printCurrentWeather(cityName) {
   const OPEN_WEATHER_MAP_API =
