@@ -39,15 +39,15 @@ export async function printWeatherFor7Days({ lat, lon }) {
   const dailyData = data.daily;
   console.log(dailyData);
   dailyData.forEach((dayData) => {
-    const date = DateTime.fromSeconds(dayData.dt);
-    .setLocale("ro")
-    .toLocaleString(DateTime.DATE_MED),
+    const date = DateTime.fromSeconds(dayData.dt)
+      .setLocale("ro")
+      .toLocaleString(DateTime.DATE_MED);
     const arr = [
-      date.setLocale("ro").toLocaleString(DateTime.DATE_MED),
+      date,
       dayData.dt,
-      dayData.temp.max,
-      dayData.temp.min,
-      dayData.wind_speed,
+      `${dayData.temp.max}°C`,
+      `${dayData.temp.min}°C`,
+      `${dayData.wind_speed}m/s`,
     ];
     table.push(arr);
   });
