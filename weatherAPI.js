@@ -33,9 +33,7 @@ async function getData(url) {
       },
     };
     if (errorDescription[error.response.data.cod])
-      console.log(
-        chalk.red.bold.italic(errorDescription[error.response.data.cod])
-      );
+      console.log(chalk.red.bold(errorDescription[error.response.data.cod]));
     else
       console.log(
         "Sarean bratan. Aishi ii cacaita eroare care n-am mai vazut-o."
@@ -47,7 +45,7 @@ async function getData(url) {
 export async function printCurrentWeather(cityName) {
   const OPEN_WEATHER_MAP_API =
     `https://api.openweathermap.org/data/2.5/weather?q=${cityName}` +
-    `&appid=asdfasdf&units=metric&lang=ro`;
+    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
 
   let data = await getData(OPEN_WEATHER_MAP_API);
   console.log(
@@ -70,8 +68,11 @@ export async function printWeatherFor7Days({ lat, lon }) {
     `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}` +
     `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
 
-  let data = await getData(OPEN_WEATHER_MAP_API);
-  let table = new Table({
+  const data = await getData(OPEN_WEATHER_MAP_API);
+  console.log(genForecastTable(data).toString());
+}
+function genForecastTable(data) {
+  const table = new Table({
     head: ["Data", "Temp max", "Temp min", "Viteza vantului"],
   });
   const dailyData = data.daily;
@@ -89,6 +90,5 @@ export async function printWeatherFor7Days({ lat, lon }) {
     ];
     table.push(arr);
   });
-
-  console.log(table.toString());
+  return table;
 }
