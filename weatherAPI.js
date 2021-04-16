@@ -2,20 +2,49 @@ import axios from "axios";
 import { OPEN_WEATHER_MAP_API_KEY } from "./credentials.js";
 import Table from "cli-table3";
 import { DateTime } from "luxon";
+
+/**
+ *  @typedef {object} WeatherData
+ *
+ *
+ *  @param {string} url
+ *
+ * @returns {WeatherData}
+ */
 async function getData(url) {
   try {
     const response = await axios.get(url);
     const data = response.data;
     return data;
   } catch (error) {
-    console.log(error);
+    const errorDescription = {
+      404:
+        "Denumirea orașului nu este validă. " +
+        "Vă rugăm verificați dacă ați introdus corect numele orașului.",
+      401: "API key este incorectă. Vă rugăm verificați fișierul credentials.js.",
+      429: "Ați depășit limita de cererei către OpenWeatherMap API.",
+      500: "Ne pare rău, a apărut o eroare internă a serverului.",
+      ENOTFOUND:
+        "Nu există o conexiune cu internetul." +
+        "Verificați setările și aparatajul pentru interent.",
+      get EAI_AGAIN() {
+        return this.ENOTFOUND;
+      },
+    };
+    if (errorDescription[error.response.data.cod])
+      console.log(errorDescription[error.response.data.cod]);
+    else
+      console.log(
+        "Sarean bratan. Aishi ii cacaita eroare care n-am mai vazut-o."
+      );
   }
+  process.exit();
 }
 
 export async function printCurrentWeather(cityName) {
   const OPEN_WEATHER_MAP_API =
     `https://api.openweathermap.org/data/2.5/weather?q=${cityName}` +
-    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
+    `&appid=asdfasdf&units=metric&lang=ro`;
 
   let data = await getData(OPEN_WEATHER_MAP_API);
   console.log(
@@ -26,6 +55,12 @@ export async function printCurrentWeather(cityName) {
 
   return data.coord;
 }
+/**
+ *
+ * @param {WeatherData} data
+ *
+ * @return {table}
+ */
 
 export async function printWeatherFor7Days({ lat, lon }) {
   const OPEN_WEATHER_MAP_API =
@@ -37,7 +72,7 @@ export async function printWeatherFor7Days({ lat, lon }) {
     head: ["Data", "Temp max", "Temp min", "Viteza vantului"],
   });
   const dailyData = data.daily;
-  console.log(dailyData);
+  //console.log(dailyData);
   dailyData.forEach((dayData) => {
     const date = DateTime.fromSeconds(dayData.dt)
       .setLocale("ro")
