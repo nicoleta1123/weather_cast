@@ -71,6 +71,7 @@ export async function printWeatherFor7Days({ lat, lon }) {
   const data = await getData(OPEN_WEATHER_MAP_API);
   console.log(genForecastTable(data).toString());
 }
+
 function genForecastTable(data) {
   const table = new Table({
     head: ["Data", "Temp max", "Temp min", "Viteza vantului"],
